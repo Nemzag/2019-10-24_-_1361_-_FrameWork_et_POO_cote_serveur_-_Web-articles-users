@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+
+    <div class="jumbotron">
+        <h1 class="display-4">{{ post.title }}</h1>
+
+        <div class="row">
+
+            <div class="col-md-3">
+            {# div.col-md3 #}
+
+                <img src="{{ asset('assets/img/posts/') ~ post.image }}" alt="">
+                {# path ~ invocation image #}
+
+            </div>
+
+            <div class="col-md-9">
+
+                <h3 class="lead">{{ post.created | date('Y-m-d') }}</h3>
+
+                <p>{{ post.content }}</p>
+
+                <hr class="my-4">
+
+                <a href="{{ path('posts') }}" class="btn btn-primary">View All</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

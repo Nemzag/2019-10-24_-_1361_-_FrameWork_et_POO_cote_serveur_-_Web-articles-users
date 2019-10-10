@@ -1,0 +1,19 @@
+/*
+ * Created by PhpStorm.
+ * User: Nemzag aka Gaz‑mên Arifi (Shkypi, 1979-09-30).
+ * Date: 2019-09-26
+ * Time: 10:14:40
+ * Updated:
+*/
+
+div img {
+    width: 60px; /* w60px */
+}
+
+div.col-md-3 img {
+    width: 180px;
+    margin-top: 1em;
+}
+
+
+
