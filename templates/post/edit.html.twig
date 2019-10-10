@@ -1,0 +1,27 @@
+{#
+ * Created by PhpStorm.
+ * User: Nemzag aka Gaz‑mên Arifi (Shkypi, 1979-09-30).
+ * Date: 04/10/2019
+ * Time: 13:43
+ * Updated:
+#}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="row">
+
+        <div class="col-md-10 offset-1">
+            {# offset decalage de colone. #}
+
+            <h2 class="my-4">Ajouter un article</h2>
+            {# Margin sur axe Y #}
+            {# Pour ajouter bootstrap au formulaire, il faut allé dans config/packages/twig.yaml #}
+            {# Ajouté la clé : form_themes: ['bootstrap_4_layout.html.twig'] #}
+            {{ form(form) }}
+
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vêb‑arθi‑klë’s{% endblock %}
+
+{# Voir base.html.twig pro le block message #}
+
+{% block body %}
+
+    <main class="container">
+
+        <div class="jumbotron">
+
+            {# Recupere le titre du title. #}
+            <h1 class="display-4">{{ block('title') }}</h1>
+
+            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquam atque beatae corporis dolore dolorum enim facere laudantium natus quisquam.</p>
+            <hr class="my-4">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo, quod?</p>
+            <p class="lead">
+                {# Ajout du lien pro nouveau poste. #}
+                <a class="btn btn-primary btn-lg" {# href="#" #} href="{{ path('newpost') }}" role="button">Nouwêllë arθi‑kulë</a>
+            </p>
+        </div>
+
+    <section class="row">
+        <div class="col-md-12">
+
+            <table class="table">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">Logo</th>
+                    <th scope="col">Titrë dë lë arθi‑kulë</th>
+                    <th scope="col">Daθë dë paruθiõn</th>
+                    <th scope="col">Katë‑êgorië</th>
+                    <th scope="col">Édiθiõn</th>
+                    <th scope="col">Supprimer</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for post in posts %}
+                {# VARIABLE in VUE ; en PHP c'est le contraire … AS … #}
+                <tr>
+                    <th><img src="{{ asset('assets/img/posts/') ~ post.image }}" alt=""></th>
+                    {# ~ concatenate #}
+
+                    {# Nom du parametre et nom dans la base de donnée. #}
+                    <td><a href="{{ path('onepost', {id:post.id}) }}">{{ post.title }}</a></td>
+
+                    <td>{{ post.created|date('d/m/Y')}}</td>
+
+                    <td>{{ post.category.category }}</td>
+
+                    <td><a href="{{ path('editpost', {id:post.id}) }}"><i class="far fa-edit text-primary"></i></a></td>
+
+                    {# Nom du parametre et nom dans la base de donnée. #}
+                    <th><a href="{{ path('delpost', {id:post.id}) }}"><i class="far fa-trash-alt text-danger"></i></a></th>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+
+        </div>
+    </section>
+    </main>
+{% endblock %}
