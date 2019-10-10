@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,8 +16,28 @@ class PostController extends AbstractController
 	/**
 	 * @Route("/", name="posts")
 	 */
+	// Injection de dépendance.
+	public function viewPosts(PostRepository $repository)
+	{
+		/*
+		// Code pro afficher que les visibles.
+		$posts = $repository->findBy(
+			['published' => true],
+			['created' => 'DESC'] /*,
+			5 // limit 5 *//*
+		);
+		return $this->render('post/index.html.twig', [
+			'posts' => $posts
+		]);
+	}*/
+		// Réécriture afin de voir les deux cas.
+		$posts = $repository->findAll();
+		return $this->render('post/index.html.twig', [
+			'posts' => $posts
+			]
+		);
+	}
 
-    /*
     public function index()
     {
     	$posts = $this->getDoctrine()
@@ -34,19 +55,6 @@ class PostController extends AbstractController
         ]);
     }
 	*/
-
-    // Injection de dépendance.
-	public function viewPosts(PostRepository $repository) {
-		$posts = $repository->findBy(
-			['published' => true],
-			['created' => 'DESC'] /*,
-			5 // limit 5 */
-		);
-
-		return $this->render('post/index.html.twig', [
-			'posts' => $posts
-		]);
-	}
 
 	// Le tiret peut aussi être remplacé par un slash, le nomenclature est libre.
 	// Cela ne marchait pas car si on utilise WAMP64 ou Laragon,
@@ -166,5 +174,31 @@ class PostController extends AbstractController
 				'post' => $post,
 				'form' => $form->createView()
 			]);
+	}
+
+	/**
+	 * @Route("/view-{id}", name="view")
+	 */
+	public function view(ObjectManager $em, PostRepository $repository, $id)
+	// Injection de dépendance
+	// Du faite de l'invocation de ObjetManager, c'est ligne sont superflue.
+	{
+		/*
+		// Entity manager
+		$em = $this->getDoctrine()->getManager();
+		$repository = $this->getDoctrine()->getRepository(Post::class);
+		// (Post::class) représente « Entity\Post.php »
+		*/
+		$post = $repository->find($id);
+		// $post->setPublished(0);
+		$post->getPublished() ? $post->setPublished(0) : $post->setPublished(1);
+		$em->flush();
+
+		$this->addFlash(
+			'success',
+			'Votre article a bien été caché.'
+		);
+
+		return $this->redirectToRoute('posts');
 	}
 }

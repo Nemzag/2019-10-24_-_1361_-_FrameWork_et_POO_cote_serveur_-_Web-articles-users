@@ -34,6 +34,7 @@
                     <th scope="col">Katë‑êgorië</th>
                     <th scope="col">Édiθiõn</th>
                     <th scope="col">Supprimer</th>
+                    <th scope="col">Visibilitée</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -54,6 +55,14 @@
 
                     {# Nom du parametre et nom dans la base de donnée. #}
                     <th><a href="{{ path('delpost', {id:post.id}) }}"><i class="far fa-trash-alt text-danger"></i></a></th>
+
+                    <th><a href="{{ path('view', {id:post.id}) }}">
+                        {%  if post.published == 0 %}
+                            <i class="far fa-eye"></i>
+                        {% else %}
+                            <i class="far fa-eye-slash"></i>
+                        {% endif %}
+                        </a></th>
                 </tr>
                 {% endfor %}
                 </tbody>
