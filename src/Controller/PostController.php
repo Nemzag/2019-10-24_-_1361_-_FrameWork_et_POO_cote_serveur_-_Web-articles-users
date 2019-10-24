@@ -54,7 +54,6 @@ class PostController extends AbstractController
 	        // Nom du paramètre, que l'on associe à la variable;
         ]);
     }
-	*/
 
 	// Le tiret peut aussi être remplacé par un slash, le nomenclature est libre.
 	// Cela ne marchait pas car si on utilise WAMP64 ou Laragon,
