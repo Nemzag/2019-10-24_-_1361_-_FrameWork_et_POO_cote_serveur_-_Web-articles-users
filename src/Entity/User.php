@@ -5,11 +5,21 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert; // Assert est un alias.
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(
+ *     "userName",
+ *     message="Nom de utilisateur déjà pris."
+ * )
+ * @UniqueEntity(
+ *     "email",
+ *     message="E‑mail déjà pris.")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -38,10 +48,25 @@ class User
      */
     private $email;
 
+    // On va vérifier des condition d'acceptation dans un champs.
+	// Avec @Assert et une propriété Length
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *     min = 4,
+     *     minMessage = "Le mot de passe doit contenir au minimum {{ limit }} caractères."
+     * )
      */
     private $password;
+
+	// Ajouté manu‑êlle‑mênt suite à la modification de Form\RegistrationType.php
+	/**
+	 * @Assert\EqualTo(
+	 *     propertyPath="password",
+	 *     message="Le mot de passe doit‑être identique."
+	 * )
+	 */
+	public $confirmPassword;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="user")
@@ -58,9 +83,14 @@ class User
         return $this->id;
     }
 
-    public function setFirstName(string $first_name): self
+	public function getFirstName(): ?string
+	{
+		return $this->firstName;
+	}
+
+    public function setFirstName(string $firstName): self
     {
-        $this->first_name = $first_name;
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -143,4 +173,49 @@ class User
 
         return $this;
     }
+
+	/**
+	 * Returns the roles granted to the user.
+	 *
+	 *     public function getRoles()
+	 *     {
+	 *         return ['ROLE_USER'];
+	 *     }
+	 *
+	 * Alternatively, the roles might be stored on a ``roles`` property,
+	 * and populated in any number of different ways when the user object
+	 * is created.
+	 *
+	 * @return (Role|string)[] The user roles
+	 */
+	public function getRoles()
+	{
+		// TODO: Implement getRoles() method.
+		return ['ROLE_USER']; // Type array.
+	}
+
+	/**
+	 * Returns the salt that was originally used to encode the password.
+	 *
+	 * This can return null if the password was not encoded using a salt.
+	 *
+	 * @return string|null The salt
+	 */
+	public function getSalt()
+	{
+		// TODO: Implement getSalt() method.
+	}
+
+	/**
+	 * Removes sensitive data from the user.
+	 *
+	 * This is important if, at any given point, sensitive information like
+	 * the plain-text password is stored on this object.
+	 */
+	public function eraseCredentials()
+	{
+		// TODO: Implement eraseCredentials() method.
+	}
+
+
 }
