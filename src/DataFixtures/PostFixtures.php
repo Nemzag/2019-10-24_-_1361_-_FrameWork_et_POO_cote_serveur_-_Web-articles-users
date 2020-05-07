@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -22,6 +23,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
 	    // Utilisation de repository des categories pour invoquer la méthode findAll.
 	    $categories = $manager->getRepository(Category::class)->findAll();
 	    // Comme j'utilise ObjectManager, je ne dois pash invoquer getDoctrine
+		$users = $manager->getRepository(User::class)->findAll();
 
 	    for($i = 1; $i <= 20; $i++) {
 	    	$post = new Post();
@@ -32,6 +34,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
 	    	$post->setPublished(1);
 	    	$post->setCategory($categories[$faker->numberBetween(0, count($categories) - 1)]);
 		    // nombre aleatoire à générer. Moins 1 car dans la d
+			$post->setUser($users[$faker->numberBetween(0, count($users) - 1)]); // Offset
 
 	    	$manager->persist($post);
 	    }
@@ -40,13 +43,13 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->flush();
     }
-
     // Ce nom est obligatorie et proposé car j'utilise une interface.
     public function getDependencies()
     {
 	    // TODO: Implement getDependencies() method.
 	    return [
-	    	CategoryFixtures::class
+	    	CategoryFixtures::class,
+		    UserFixtures::class
 	    ];
     }
 }

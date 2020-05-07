@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
 use Doctrine\Common\Persistence\ObjectManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -76,9 +77,11 @@ class PostController extends AbstractController
 	    ]);
     }
 
+    // Nouvelle méthode de securisation, par la route.
     // http://localhost/Symfony4_-_2019/webarticles/public/newpost
     /**
      * @Route("/newpost", name="newpost")
+     * @IsGranted("ROLE_USER")
      */
     public function newPost(Request $request) // alt+enter sur request.
 	// on besoin de une classe request qui dans la HttpFoundation.
@@ -97,6 +100,9 @@ class PostController extends AbstractController
 
 			// Em = Entity Manager
 			$em = $this->getDoctrine()->getManager();
+
+			// Sécurisation pour empêcher un autre user de ajouter chez un autre user.
+			$post->setUser($this->getUser()); // Php storm ne gère pash bien certaine fonctionnalité.
 
 			// Persist & Flush
 			$em->persist($post);
@@ -123,9 +129,11 @@ class PostController extends AbstractController
 		]);
 	}
 
+	// Nouvelle méthode de securisation, par la route.
 	// Efface‑mênt.
 	/**
 	 * @Route("/del-{id}", name="delpost")
+	 * @IsGranted("ROLE_USER")
 	 */
 	public function delpost($id) {
 		// Entity manager
@@ -146,8 +154,10 @@ class PostController extends AbstractController
 		return $this->redirectToRoute('posts');
 	}
 
+	// Nouvelle méthode de securisation, par la route.
 	/**
 	 * @Route("/edit-{id}", name="editpost")
+	 * @IsGranted("ROLE_USER")
 	 */
 	public function editPost(Request $request, Post $post) {
 	// Injection de dépendance (la classe Post ne devra plus être instancié).
@@ -175,8 +185,10 @@ class PostController extends AbstractController
 			]);
 	}
 
+	// Nouvelle méthode de securisation, par la route.
 	/**
 	 * @Route("/view-{id}", name="view")
+	 * @IsGranted("ROLE_USER")
 	 */
 	public function view(ObjectManager $em, PostRepository $repository, $id)
 	// Injection de dépendance
